@@ -1,0 +1,53 @@
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: false # 是否将服务id转换为小写
+      # 默认熔断
+      default-filters:
+        - name: CircuitBreaker
+          args:
+            name: myCircuitBreaker
+            fallbackUri: forward:/gatewayFallback
+      routes:
+        - id: baidu-router
+          uri: https://www.baidu.com
+          filters:
+            - StripPrefix=1
+          predicates:
+            - Path=/baidu/**
+
+        - id: hy-router
+          uri: https://i.huya.com/index.php?m=Subscribe&watch=1
+          predicates:
+            - Path=/hy/**
+          filters:
+            - StripPrefix=1
+
+        - id: swagger-router
+          uri: lb://test.api/
+          predicates:
+            - Path=/swagger/**
+
+        #在服务注册中心找服务名为test.api的服务
+        - id: test-router
+          uri: lb://test.api/
+          predicates:
+            - Path=/api/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                deny-empty-key: true
+                keyResolver: '#{@ipKeyResolver}'
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter.burstCapacity: 2
+
+        # auth-svc
+        - id: auth-svc
+          uri: lb://auth-svc/
+          predicates:
+            - Path=/auth-svc/**
+
+

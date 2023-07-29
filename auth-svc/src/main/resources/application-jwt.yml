@@ -1,0 +1,8 @@
+passjava:
+  jwt:
+    enabled: true   # 是否开启JWT登录认证功能
+    secret: passjava  # JWT 私钥，用于校验JWT令牌的合法性
+    expiration: 3600000 # JWT 令牌的有效期，用于校验JWT令牌的合法性，一个小时
+    skipValidUrl:
+      - /token
+

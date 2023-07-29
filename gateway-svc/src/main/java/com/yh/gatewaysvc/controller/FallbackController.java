@@ -1,0 +1,14 @@
+package com.yh.gatewaysvc.controller;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
+
+@RestController
+public class FallbackController {
+    @RequestMapping("/gatewayFallback")
+    public Mono<String> myFallback() {
+        System.out.println("gateway服务降级");
+        return Mono.just("Service Unreachable");
+    }
+}

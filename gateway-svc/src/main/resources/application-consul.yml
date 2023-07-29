@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        enabled: true
+        register: true
+        service-name: ${spring.application.name}
+        instanceId: ${spring.application.name}-${spring.cloud.client.ip-address}-${server.port}
+        tags: gateway-svc
+        healthCheckInterval: 15s
